@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { DailyGameState, CellObscurityStats, CellIdentifier } from './types/game';
 import { getTodayDateString } from './engine/puzzleGenerator';
 import {
@@ -186,10 +186,10 @@ export const App: React.FC = () => {
     setActiveCell({ row, col });
   };
 
-  const handleCloseSearchModal = () => {
+  const handleCloseSearchModal = useCallback(() => {
     activeCellLockRef.current = null;
     setActiveCell(null);
-  };
+  }, []);
 
   const handleSelectBrawler = (brawlerId: number) => {
     const targetCell = activeCellLockRef.current ?? activeCell;
@@ -260,7 +260,7 @@ export const App: React.FC = () => {
     setShowPostGameModal(true);
   };
 
-  const usedBrawlerIds = getUsedBrawlerIds(gameState);
+  const usedBrawlerIds = useMemo(() => getUsedBrawlerIds(gameState), [gameState]);
 
   return (
     <div className="flex min-h-screen flex-col bg-brawl-blue-sky text-brawl-navy">

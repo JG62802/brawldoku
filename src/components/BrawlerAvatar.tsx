@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Brawler } from '../types/game';
+import { Brawler } from '../types/game.js';
 
 interface BrawlerAvatarProps {
   brawler: Brawler;
@@ -15,18 +15,12 @@ const SIZE_MAP = {
 };
 
 /** Official Brawl Stars portrait with a bold display monogram fallback. */
-export const BrawlerAvatar: React.FC<BrawlerAvatarProps> = ({
+export const BrawlerAvatar: React.FC<BrawlerAvatarProps> = React.memo(({
   brawler,
   size = 'md',
   className = '',
 }) => {
   const [imgError, setImgError] = useState(false);
-  const initials = brawler.name
-    .split(/[\s&-]+/)
-    .map((w) => w[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase();
 
   return (
     <div
@@ -37,13 +31,16 @@ export const BrawlerAvatar: React.FC<BrawlerAvatarProps> = ({
           src={brawler.imageUrl}
           alt={brawler.name}
           loading="lazy"
+          decoding="async"
           draggable={false}
           onError={() => setImgError(true)}
           className="w-full h-full object-contain drop-shadow-[0_2px_0_rgba(11,19,43,0.35)]"
         />
       ) : (
-        <span className="font-display text-base uppercase tracking-wide text-brawl-navy">{initials}</span>
+        <span className="font-display text-base uppercase tracking-wide text-brawl-navy">
+          {brawler.name.slice(0, 2).toUpperCase()}
+        </span>
       )}
     </div>
   );
-};
+});
