@@ -108,6 +108,27 @@ const API_BASE_URL =
   ((import.meta as unknown as { env?: Record<string, string | undefined> }).env
     ?.VITE_OBSCURITY_API_URL) || '/api/obscurity';
 
+const PLAYER_ID_STORAGE_KEY = 'brawldoku_anon_player_id_v1';
+
+/**
+ * Returns a stable, anonymous browser identifier used exclusively to prevent
+ * duplicate submissions from inflating cell counts. Contains no personal information.
+ */
+export function getOrCreateAnonymousPlayerId(): string {
+  try {
+    let id = localStorage.getItem(PLAYER_ID_STORAGE_KEY);
+    if (!id) {
+      id = typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID()
+        : Math.random().toString(36).slice(2) + Date.now().toString(36);
+      localStorage.setItem(PLAYER_ID_STORAGE_KEY, id);
+    }
+    return id;
+  } catch {
+    return 'anon-' + Date.now();
+  }
+}
+
 /**
  * Fetches aggregated obscurity statistics for a daily puzzle from the backend API.
  * If live backend data is unavailable, returns source: 'unavailable' and never fabricates statistics.
@@ -177,6 +198,7 @@ export async function recordValidCellSubmission(
   }
 
   try {
+    const playerId = getOrCreateAnonymousPlayerId();
     const response = await fetch(API_BASE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -185,6 +207,7 @@ export async function recordValidCellSubmission(
         cellId: submission.cellId,
         brawlerId: submission.brawlerId,
         submittedAt: submission.submittedAt,
+        playerId,
       }),
     });
 

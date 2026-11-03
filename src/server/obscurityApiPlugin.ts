@@ -118,14 +118,21 @@ export class ObscurityDatabaseStore {
   }
 }
 
-export function obscurityApiPlugin(): Plugin {
-  const dbPath = path.resolve(process.cwd(), '.data/obscurity_submissions.json');
-  const store = new ObscurityDatabaseStore(dbPath);
+import { getObscurityStore, validateCellSubmission } from './obscurityStore';
 
+export function obscurityApiPlugin(): Plugin {
   return {
     name: 'brawldoku-obscurity-api',
     configureServer(server) {
-      server.middlewares.use('/api/obscurity', (req, res, next) => {
+      // Lazy store retrieval so vite build does not instantiate store at config load time
+      let store: ReturnType<typeof getObscurityStore>;
+      try {
+        store = getObscurityStore();
+      } catch {
+        // In local dev without credentials if NODE_ENV was set to prod, fall back safely
+        store = new ObscurityDatabaseStore(path.resolve(process.cwd(), 'data/obscurity.json')) as unknown as ReturnType<typeof getObscurityStore>;
+      }
+      server.middlewares.use('/api/obscurity', async (req, res, next) => {
         if (!req.url) return next();
 
         const urlObj = new URL(req.url, 'http://localhost');
@@ -139,10 +146,16 @@ export function obscurityApiPlugin(): Plugin {
             return;
           }
 
-          const cells = store.getPuzzleSummary(puzzleId);
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({ puzzleId, cells }));
+          try {
+            const cells = await store.getPuzzleSummary(puzzleId);
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ puzzleId, cells }));
+          } catch {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: 'Failed to retrieve puzzle summary' }));
+          }
           return;
         }
 
@@ -151,24 +164,34 @@ export function obscurityApiPlugin(): Plugin {
           req.on('data', (chunk) => {
             body += chunk;
           });
-          req.on('end', () => {
+          req.on('end', async () => {
             try {
-              const payload = JSON.parse(body) as ObscuritySubmissionRecord;
-              const cellStats = store.insertValidSubmission(payload);
-              if (!cellStats) {
+              const payload = JSON.parse(body) as {
+                puzzleId: string;
+                cellId: CellIdentifier;
+                brawlerId: number;
+                playerId?: string;
+                submittedAt?: string;
+              };
+
+              const validation = validateCellSubmission(
+                payload.puzzleId,
+                payload.cellId,
+                payload.brawlerId
+              );
+
+              if (!validation.valid) {
                 res.statusCode = 422;
                 res.setHeader('Content-Type', 'application/json');
-                res.end(
-                  JSON.stringify({
-                    error: 'Invalid submission or Brawler does not satisfy cell categories.',
-                  })
-                );
+                res.end(JSON.stringify({ error: validation.error }));
                 return;
               }
 
-              res.statusCode = 201;
+              const { cellStats, alreadySubmitted } = await store.recordSubmission(payload);
+
+              res.statusCode = alreadySubmitted ? 200 : 201;
               res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ cellStats }));
+              res.end(JSON.stringify({ cellStats, alreadySubmitted }));
             } catch {
               res.statusCode = 400;
               res.setHeader('Content-Type', 'application/json');

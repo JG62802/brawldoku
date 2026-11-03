@@ -17,5 +17,5 @@
     "noUncheckedSideEffectImports": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts", "src/server/**/*", "src/engine/**/*", "src/data/**/*", "src/types/**/*"]
+  "include": ["vite.config.ts", "api/**/*", "src/server/**/*", "src/engine/**/*", "src/data/**/*", "src/types/**/*"]
 }
