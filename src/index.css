@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    background-color: #EAF1FF;
+    color: #0B132B;
+    font-family: 'Nunito Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible {
+    outline: 3px solid #FFC700;
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Brawl Stars style substantial buttons with thick dark outlines and hard-edged shadows */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border-[2.5px] border-brawl-navy px-4 h-10 font-display text-[15px] uppercase tracking-[0.03em] transition-all duration-100 select-none disabled:cursor-not-allowed disabled:opacity-45;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border-[2.5px] border-brawl-navy px-4 h-10 font-display text-[15px] uppercase tracking-[0.03em] transition-all duration-100 select-none disabled:cursor-not-allowed disabled:opacity-45 bg-brawl-yellow text-brawl-navy shadow-brawl-sm hover:bg-brawl-yellow-hover active:translate-y-[2px] active:shadow-none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border-[2.5px] border-brawl-navy px-4 h-10 font-display text-[15px] uppercase tracking-[0.03em] transition-all duration-100 select-none disabled:cursor-not-allowed disabled:opacity-45 bg-white text-brawl-navy shadow-brawl-sm hover:bg-brawl-yellow-pale active:translate-y-[2px] active:shadow-none;
+  }
+
+  .btn-blue {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border-[2.5px] border-brawl-navy px-4 h-10 font-display text-[15px] uppercase tracking-[0.03em] transition-all duration-100 select-none disabled:cursor-not-allowed disabled:opacity-45 bg-brawl-blue text-white shadow-brawl-sm hover:bg-brawl-blue-light active:translate-y-[2px] active:shadow-none;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-xl border-2 border-transparent px-3 h-9 font-display text-[14px] uppercase tracking-[0.03em] text-brawl-navy transition-colors hover:border-brawl-navy hover:bg-white;
+  }
+
+  /* Bold uppercase game label */
+  .caption {
+    @apply font-display text-[11px] sm:text-[12px] uppercase tracking-[0.06em] text-brawl-navy/75;
+  }
+
+  /* Safe word wrapping for category titles and headers - never split words mid-word */
+  .category-label {
+    word-break: normal;
+    overflow-wrap: normal;
+    hyphens: none;
+    -webkit-hyphens: none;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px) rotate(-1deg); }
+  40% { transform: translateX(5px) rotate(1deg); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Crisp dark navy outline shadow for display text on saturated surfaces */
+  .text-outline {
+    text-shadow:
+      -1.5px -1.5px 0 #0B132B,
+       1.5px -1.5px 0 #0B132B,
+      -1.5px  1.5px 0 #0B132B,
+       1.5px  1.5px 0 #0B132B,
+       0px    3px   0 #0B132B;
+  }
+
+  .text-outline-sm {
+    text-shadow:
+      -1px -1px 0 #0B132B,
+       1px -1px 0 #0B132B,
+      -1px  1px 0 #0B132B,
+       1px  1px 0 #0B132B,
+       0px  2px 0 #0B132B;
+  }
+}
