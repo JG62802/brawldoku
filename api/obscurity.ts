@@ -132,7 +132,7 @@ export default async function handler(
 
     // Server-authoritative category and validity check
     const validation = validateCellSubmission(String(puzzleId), String(cellId), numBrawlerId);
-    if (!validation.valid) {
+    if (validation.valid === false) {
       res.status(422).json({ error: validation.error });
       return;
     }

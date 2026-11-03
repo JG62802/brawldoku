@@ -180,7 +180,7 @@ export function obscurityApiPlugin(): Plugin {
                 payload.brawlerId
               );
 
-              if (!validation.valid) {
+              if (validation.valid === false) {
                 res.statusCode = 422;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ error: validation.error }));
