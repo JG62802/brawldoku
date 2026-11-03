@@ -22,6 +22,7 @@ import { BrawlerSearchModal } from './components/BrawlerSearchModal';
 import { PostGameModal } from './components/PostGameModal';
 import { CellAnswersModal } from './components/CellAnswersModal';
 import { HowToPlayModal, CategoryGlossaryModal } from './components/InfoModals';
+import { Analytics } from '@vercel/analytics/react';
 
 const STORAGE_PREFIX = 'brawldoku_daily_v5_';
 const DONT_SHOW_TUTORIAL_KEY = 'brawldoku_dont_show_tutorial_v2';
@@ -367,6 +368,9 @@ export const App: React.FC = () => {
       {showGlossaryModal && (
         <CategoryGlossaryModal onClose={() => setShowGlossaryModal(false)} />
       )}
+
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </div>
   );
 };
