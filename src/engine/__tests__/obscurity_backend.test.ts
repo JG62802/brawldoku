@@ -6,11 +6,11 @@ import {
   setObscurityStoreForTesting,
   getObscurityStore,
   ObscurityConfigError,
-} from '../../server/obscurityStore';
-import handler from '../../../api/obscurity';
-import { calculateObscurityFromStats } from '../../services/obscurityService';
-import { generateDailyPuzzle } from '../puzzleGenerator';
-import { createInitialGameState, updateCellObscurity } from '../gameEngine';
+} from '../../server/obscurityStore.js';
+import handler from '../../../api/obscurity.js';
+import { calculateObscurityFromStats } from '../../services/obscurityService.js';
+import { generateDailyPuzzle } from '../puzzleGenerator.js';
+import { createInitialGameState, updateCellObscurity } from '../gameEngine.js';
 
 describe('Production Obscurity Backend Final Review Verification', () => {
   let store: MemoryStore;

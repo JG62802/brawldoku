@@ -5,8 +5,8 @@ import {
   CellIdentifier,
   CellObscurityStats,
   ObscuritySubmissionRecord,
-} from '../types/game';
-import { generateDailyPuzzle } from '../engine/puzzleGenerator';
+} from '../types/game.js';
+import { generateDailyPuzzle } from '../engine/puzzleGenerator.js';
 
 const VALID_CELL_IDS = new Set<CellIdentifier>([
   '0-0', '0-1', '0-2',
@@ -118,7 +118,7 @@ export class ObscurityDatabaseStore {
   }
 }
 
-import { getObscurityStore, validateCellSubmission } from './obscurityStore';
+import { getObscurityStore, validateCellSubmission } from './obscurityStore.js';
 
 export function obscurityApiPlugin(): Plugin {
   return {

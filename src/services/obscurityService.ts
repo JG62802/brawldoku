@@ -4,9 +4,9 @@ import {
   ObscurityDataStatus,
   ObscuritySubmissionRecord,
   PuzzleObscuritySummary,
-} from '../types/game';
-import { BRAWLER_BY_ID } from '../data/brawlers';
-import { CATEGORY_BY_ID } from '../engine/categories';
+} from '../types/game.js';
+import { BRAWLER_BY_ID } from '../data/brawlers.js';
+import { CATEGORY_BY_ID } from '../engine/categories.js';
 
 export interface ObscurityResult {
   percentage: number | null;

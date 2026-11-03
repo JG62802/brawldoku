@@ -1,5 +1,5 @@
-import { CategoryDefinition, Brawler } from '../types/game';
-import { CATEGORIES, CATEGORY_BY_ID, getMatchingBrawlers } from './categories';
+import { CategoryDefinition, Brawler } from '../types/game.js';
+import { CATEGORIES, CATEGORY_BY_ID, getMatchingBrawlers } from './categories.js';
 
 // Mutually exclusive category groups that should never intersect (row vs col)
 const EXCLUSIVE_GROUPS = new Set([

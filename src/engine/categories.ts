@@ -1,5 +1,5 @@
-import { CategoryDefinition, Brawler } from '../types/game';
-import { BRAWLERS } from '../data/brawlers';
+import { CategoryDefinition, Brawler } from '../types/game.js';
+import { BRAWLERS } from '../data/brawlers.js';
 
 export const CATEGORIES: CategoryDefinition[] = [
   // ==========================================

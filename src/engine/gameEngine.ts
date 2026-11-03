@@ -3,10 +3,10 @@ import {
   CellState,
   Brawler,
   ObscurityDataStatus,
-} from '../types/game';
-import { BRAWLER_BY_ID } from '../data/brawlers';
-import { CATEGORY_BY_ID, getMatchingBrawlers } from './categories';
-import { generateDailyPuzzle } from './puzzleGenerator';
+} from '../types/game.js';
+import { BRAWLER_BY_ID } from '../data/brawlers.js';
+import { CATEGORY_BY_ID, getMatchingBrawlers } from './categories.js';
+import { generateDailyPuzzle } from './puzzleGenerator.js';
 
 export const BASE_POINTS_PER_CELL = 100;
 export const MISTAKE_PENALTY = 25;

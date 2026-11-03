@@ -4,9 +4,9 @@ import {
   validateCellSubmission,
   sanitizePlayerId,
   ObscurityConfigError,
-} from '../src/server/obscurityStore';
-import { calculateObscurityFromStats } from '../src/services/obscurityService';
-import { CellIdentifier } from '../src/types/game';
+} from '../src/server/obscurityStore.js';
+import { calculateObscurityFromStats } from '../src/services/obscurityService.js';
+import type { CellIdentifier } from '../src/types/game.js';
 
 const ALLOWED_ORIGINS = new Set([
   'https://brawldoku.fun',

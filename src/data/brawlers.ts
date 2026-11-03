@@ -1,4 +1,4 @@
-import { Brawler } from '../types/game';
+import { Brawler } from '../types/game.js';
 
 const cdnImg = (id: number) => `https://cdn.brawlify.com/brawlers/borderless/${id}.png`;
 

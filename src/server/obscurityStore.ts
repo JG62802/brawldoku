@@ -1,7 +1,7 @@
 import { Redis } from '@upstash/redis';
-import { CellIdentifier, CellObscurityStats } from '../types/game';
-import { BRAWLER_BY_ID } from '../data/brawlers';
-import { generateDailyPuzzle } from '../engine/puzzleGenerator';
+import { CellIdentifier, CellObscurityStats } from '../types/game.js';
+import { BRAWLER_BY_ID } from '../data/brawlers.js';
+import { generateDailyPuzzle } from '../engine/puzzleGenerator.js';
 
 export const VALID_CELL_IDS: CellIdentifier[] = [
   '0-0', '0-1', '0-2',
