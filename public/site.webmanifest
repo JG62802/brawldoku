@@ -1,0 +1,21 @@
+{
+  "name": "Brawldoku — Daily Brawl Stars Grid Puzzle",
+  "short_name": "Brawldoku",
+  "description": "A daily 3×3 Brawl Stars grid puzzle. Test your brawler knowledge and find rare matches.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0F19",
+  "theme_color": "#1E5AF6",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
