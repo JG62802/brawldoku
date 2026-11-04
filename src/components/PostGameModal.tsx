@@ -115,11 +115,11 @@ export const PostGameModal: React.FC<PostGameModalProps> = ({ gameState, onClose
                 >
                   {brawler ? (
                     <>
-                      <div className="relative flex min-h-0 flex-1 w-full items-center justify-center p-0.5">
+                      <div className="flex justify-center leading-none">
+                        <ObscurityValue cell={cell} />
+                      </div>
+                      <div className="flex min-h-0 flex-1 w-full items-center justify-center p-0.5">
                         <BrawlerAvatar brawler={brawler} size="cell" className="max-h-[92%] max-w-[92%]" />
-                        <div className="absolute top-0 right-0 z-20 pointer-events-none">
-                          <ObscurityValue cell={cell} />
-                        </div>
                       </div>
                       <div className="mt-0.5 w-full text-center leading-tight">
                         <span className="block truncate font-display text-[12px] sm:text-[14px] uppercase tracking-[0.02em] text-brawl-navy">
