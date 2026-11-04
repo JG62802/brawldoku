@@ -117,10 +117,8 @@ export const PostGameModal: React.FC<PostGameModalProps> = ({ gameState, onClose
                       <div className="flex min-h-0 flex-1 items-center justify-center">
                         <BrawlerAvatar brawler={brawler} size="cell" />
                       </div>
-                      <span className="self-end rounded border border-brawl-navy bg-brawl-navy px-1 py-0.5 font-display text-[10px] leading-none text-brawl-yellow tabular">
-                        {cell.obscurityStatus === 'available' && cell.obscurityPercent !== null
-                          ? `${cell.obscurityPercent}%`
-                          : 'N/A'}
+                      <span className="self-center mt-1 max-w-full truncate rounded border border-brawl-navy bg-brawl-navy px-1.5 py-0.5 font-display text-[10px] leading-none text-brawl-yellow tabular">
+                        {cell.rarityTier ? `${cell.rarityTier} · ` : ''}+{cell.pointsEarned}
                       </span>
                     </>
                   ) : (

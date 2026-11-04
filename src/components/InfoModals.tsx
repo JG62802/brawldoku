@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { Check, ChevronDown, X } from 'lucide-react';
 import { CATEGORIES } from '../engine/categories';
 import { BRAWLERS, BRAWLER_BY_ID } from '../data/brawlers';
-import { BASE_POINTS_PER_CELL, MISTAKE_PENALTY } from '../engine/gameEngine';
+import { MISTAKE_PENALTY } from '../engine/gameEngine';
 import { BrawlerAvatar } from './BrawlerAvatar';
 import { Modal } from './Modal';
 
 const SCORING_RULES: { label: string; badge: string; tone: 'green' | 'red' | 'yellow'; detail: string }[] = [
   {
-    label: 'Correct guess',
-    badge: `+${BASE_POINTS_PER_CELL} PTS`,
+    label: 'Rarity Scoring',
+    badge: '110–200 PTS',
     tone: 'green',
-    detail: 'Locks the Brawler into the cell and consumes 1 guess.',
+    detail:
+      'Points scale with community obscurity! Legendary (0–29.99%) = 200 pts, Mythic (30–49.99%) = 175 pts, Epic (50–69.99%) = 150 pts, Rare (70–89.99%) = 125 pts, Common (90–100%) = 110 pts (+100 pts baseline fallback).',
   },
   {
     label: 'Incorrect guess',
@@ -26,11 +27,11 @@ const SCORING_RULES: { label: string; badge: string; tone: 'green' | 'red' | 'ye
     detail: 'Each Brawler can only be used once per grid. Duplicates do not cost a guess.',
   },
   {
-    label: 'Obscurity %',
-    badge: 'Bottom-right',
+    label: 'Rarity Badges',
+    badge: 'Pick Rarity',
     tone: 'yellow',
     detail:
-      'Shows the percentage of valid player submissions for that cell that chose the same Brawler (or N/A when live stats are unavailable). Lower % = rarer pick.',
+      'Rarer community picks give higher score! Pick unique Brawlers that fit both categories to climb into Mythic and Legendary scoring.',
   },
 ];
 

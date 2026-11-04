@@ -116,6 +116,8 @@ export interface PuzzleObscuritySummary {
 
 export type ObscurityDataStatus = 'idle' | 'loading' | 'available' | 'unavailable';
 
+export type RarityTierName = 'Legendary' | 'Mythic' | 'Epic' | 'Rare' | 'Common';
+
 export interface CellState {
   row: number;
   col: number;
@@ -124,6 +126,7 @@ export interface CellState {
   obscurityPercent: number | null;
   obscurityStatus: ObscurityDataStatus;
   validCount: number;
+  rarityTier?: RarityTierName | null;
 }
 
 export interface GuessRecord {

@@ -7,6 +7,19 @@ import {
 import { BRAWLER_BY_ID } from '../data/brawlers.js';
 import { CATEGORY_BY_ID, getMatchingBrawlers } from './categories.js';
 import { generateDailyPuzzle } from './puzzleGenerator.js';
+import {
+  FALLBACK_CELL_POINTS,
+  getRarityTierForPercentage,
+  getPointsForPercentage,
+  recalculateTotalScore,
+} from './rarityScoring.js';
+
+export {
+  FALLBACK_CELL_POINTS,
+  getRarityTierForPercentage,
+  getPointsForPercentage,
+  recalculateTotalScore,
+};
 
 export const BASE_POINTS_PER_CELL = 100;
 export const MISTAKE_PENALTY = 25;
@@ -24,6 +37,7 @@ export function createInitialGameState(dateStr: string): DailyGameState {
       obscurityPercent: null,
       obscurityStatus: 'idle',
       validCount: puzzle.cellMatches[r][c].length,
+      rarityTier: null,
     }))
   );
 
@@ -89,17 +103,30 @@ export function reconcileSavedGameState(
           ? savedCell.brawlerId
           : null;
 
+      const obscurityPercent =
+        brawlerId !== null && typeof savedCell.obscurityPercent === 'number'
+          ? savedCell.obscurityPercent
+          : null;
+
+      const tier = getRarityTierForPercentage(obscurityPercent);
+      const pointsEarned =
+        brawlerId !== null
+          ? tier
+            ? tier.points
+            : typeof savedCell.pointsEarned === 'number' && savedCell.pointsEarned > 0
+            ? savedCell.pointsEarned
+            : FALLBACK_CELL_POINTS
+          : 0;
+
       return {
         row: r,
         col: c,
         brawlerId,
-        pointsEarned: brawlerId !== null && typeof savedCell.pointsEarned === 'number' ? savedCell.pointsEarned : 0,
-        obscurityPercent:
-          brawlerId !== null && typeof savedCell.obscurityPercent === 'number'
-            ? savedCell.obscurityPercent
-            : null,
+        pointsEarned,
+        obscurityPercent,
         obscurityStatus: brawlerId !== null ? (savedCell.obscurityStatus ?? 'idle') : 'idle',
         validCount: canonicalCell.validCount,
+        rarityTier: tier?.name ?? (savedCell.rarityTier ?? null),
       };
     })
   );
@@ -130,17 +157,14 @@ export function reconcileSavedGameState(
 
   const guessesRemaining = status === 'game_over' && computedRemaining > 0 ? 0 : computedRemaining;
   const mistakes = validHistory.filter((g) => !g.correct).length;
-  const score = Math.max(
-    0,
-    filledCount * BASE_POINTS_PER_CELL - mistakes * MISTAKE_PENALTY
-  );
+  const score = recalculateTotalScore(cells, mistakes, MISTAKE_PENALTY);
 
   return {
     ...fresh,
     cells,
     guessesRemaining,
     maxGuesses: MAX_GUESSES,
-    score: typeof candidate.score === 'number' ? candidate.score : score,
+    score,
     mistakes,
     streak: typeof candidate.streak === 'number' ? candidate.streak : 0,
     maxStreak: typeof candidate.maxStreak === 'number' ? candidate.maxStreak : 0,
@@ -188,10 +212,14 @@ export function updateCellObscurity(
       if (rIdx === row && cIdx === col) {
         // Obscurity only applies to filled cells
         if (cell.brawlerId === null) return cell;
+        const tier = getRarityTierForPercentage(obscurityPercent);
+        const pointsEarned = tier ? tier.points : FALLBACK_CELL_POINTS;
         return {
           ...cell,
           obscurityPercent,
           obscurityStatus,
+          pointsEarned,
+          rarityTier: tier?.name ?? null,
         };
       }
       return cell;
@@ -201,6 +229,7 @@ export function updateCellObscurity(
   return {
     ...state,
     cells: nextCells,
+    score: recalculateTotalScore(nextCells, state.mistakes, MISTAKE_PENALTY),
   };
 }
 
@@ -216,7 +245,8 @@ export function submitGuess(
   state: DailyGameState,
   row: number,
   col: number,
-  brawlerId: number
+  brawlerId: number,
+  knownObscurityPercent?: number | null
 ): SubmitGuessResult {
   if (state.status !== 'playing') {
     return { nextState: state, correct: false, error: 'Game has already ended.', pointsDelta: 0 };
@@ -254,7 +284,6 @@ export function submitGuess(
 
   const nextCells = state.cells.map((r) => r.map((c) => ({ ...c })));
   const nextGuessesRemaining = state.guessesRemaining - 1;
-  let nextScore = state.score;
   let nextMistakes = state.mistakes;
   let nextStreak = state.streak;
   let nextMaxStreak = state.maxStreak;
@@ -262,8 +291,13 @@ export function submitGuess(
 
   if (isValid) {
     const validList = getMatchingBrawlers(rowCat, colCat);
-    pointsDelta = BASE_POINTS_PER_CELL;
-    nextScore = Math.max(0, state.score + pointsDelta);
+    const tier = getRarityTierForPercentage(knownObscurityPercent);
+    pointsDelta =
+      knownObscurityPercent !== undefined && knownObscurityPercent !== null
+        ? tier
+          ? tier.points
+          : FALLBACK_CELL_POINTS
+        : FALLBACK_CELL_POINTS;
     nextStreak = state.streak + 1;
     nextMaxStreak = Math.max(state.maxStreak, nextStreak);
 
@@ -271,16 +305,21 @@ export function submitGuess(
       ...targetCell,
       brawlerId: brawler.id,
       pointsEarned: pointsDelta,
-      obscurityPercent: null,
-      obscurityStatus: 'loading',
+      obscurityPercent: knownObscurityPercent ?? null,
+      obscurityStatus:
+        knownObscurityPercent !== undefined && knownObscurityPercent !== null
+          ? 'available'
+          : 'loading',
       validCount: validList.length,
+      rarityTier: tier?.name ?? null,
     };
   } else {
     nextMistakes = state.mistakes + 1;
     nextStreak = 0;
     pointsDelta = -MISTAKE_PENALTY;
-    nextScore = Math.max(0, state.score - MISTAKE_PENALTY);
   }
+
+  const nextScore = recalculateTotalScore(nextCells, nextMistakes, MISTAKE_PENALTY);
 
   const filledCount = nextCells.flat().filter((c) => c.brawlerId !== null).length;
   let nextStatus: DailyGameState['status'] = 'playing';

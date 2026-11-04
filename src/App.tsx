@@ -133,27 +133,23 @@ export const App: React.FC = () => {
 
       setGameState((prev) => {
         if (prev.puzzleDate !== summary.puzzleId) return prev;
-        const nextCells = prev.cells.map((row, rIdx) =>
-          row.map((cell, cIdx) => {
-            if (cell.brawlerId === null) return cell;
-            if (summary.source === 'unavailable') {
-              return {
-                ...cell,
-                obscurityPercent: null,
-                obscurityStatus: 'unavailable' as const,
-              };
+        let next = prev;
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            const cell = next.cells[r][c];
+            if (cell.brawlerId !== null) {
+              if (summary.source === 'unavailable') {
+                next = updateCellObscurity(next, r, c, null, 'unavailable');
+              } else {
+                const cellId = formatCellId(r, c);
+                const cellStats = summary.cells[cellId];
+                const calc = calculateObscurityFromStats(cellStats, cell.brawlerId);
+                next = updateCellObscurity(next, r, c, calc.percentage, calc.status);
+              }
             }
-            const cellId = formatCellId(rIdx, cIdx);
-            const cellStats = summary.cells[cellId];
-            const calc = calculateObscurityFromStats(cellStats, cell.brawlerId);
-            return {
-              ...cell,
-              obscurityPercent: calc.percentage,
-              obscurityStatus: calc.status,
-            };
-          })
-        );
-        return { ...prev, cells: nextCells };
+          }
+        }
+        return next;
       });
     });
 
@@ -198,7 +194,12 @@ export const App: React.FC = () => {
     activeCellLockRef.current = null;
     const { row, col } = targetCell;
 
-    const result = submitGuess(gameState, row, col, brawlerId);
+    const cellId = formatCellId(row, col);
+    const existingStats = obscurityCells[cellId];
+    const precalc = calculateObscurityFromStats(existingStats, brawlerId);
+    const knownPercent = precalc.status === 'available' ? precalc.percentage : null;
+
+    const result = submitGuess(gameState, row, col, brawlerId, knownPercent);
     setGameState(result.nextState);
     setActiveCell(null);
 
@@ -208,12 +209,13 @@ export const App: React.FC = () => {
     const colLabel = CATEGORY_BY_ID[colCatId].label;
 
     if (result.correct && result.brawler) {
+      const tierName = result.nextState.cells[row][col].rarityTier;
+      const tierBadge = tierName ? ` (${tierName})` : '';
       setFeedbackBanner({
         type: 'success',
-        message: `+${result.pointsDelta} PTS — ${result.brawler.name} fits ${rowLabel} × ${colLabel}`,
+        message: `+${result.pointsDelta} PTS${tierBadge} — ${result.brawler.name} fits ${rowLabel} × ${colLabel}`,
       });
 
-      const cellId = formatCellId(row, col);
       recordValidCellSubmission(
         {
           puzzleId: gameState.puzzleDate,

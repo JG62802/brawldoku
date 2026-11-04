@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { DailyGameState, CategoryDefinition, CellState } from '../types/game';
+import { DailyGameState, CategoryDefinition, CellState, RarityTierName } from '../types/game';
 import { CATEGORY_BY_ID } from '../engine/categories';
 import { BRAWLER_BY_ID } from '../data/brawlers';
+import { FALLBACK_CELL_POINTS, getRarityTierForPercentage } from '../engine/rarityScoring';
 import { BrawlerAvatar } from './BrawlerAvatar';
 
 interface PuzzleGridProps {
@@ -12,12 +13,20 @@ interface PuzzleGridProps {
   onInspectCellAnswers: (row: number, col: number) => void;
 }
 
-/** Real obscurity percentage, a pending marker, or an explicit "N/A" — never a fabricated 0%. */
+const TIER_BADGE_STYLES: Record<RarityTierName, { bg: string; text: string; border: string }> = {
+  Legendary: { bg: 'bg-[#FEF08A]', text: 'text-[#854D0E]', border: 'border-[#CA8A04]' },
+  Mythic: { bg: 'bg-[#FEE2E2]', text: 'text-[#991B1B]', border: 'border-[#DC2626]' },
+  Epic: { bg: 'bg-[#F3E8FF]', text: 'text-[#6B21A8]', border: 'border-[#9333EA]' },
+  Rare: { bg: 'bg-[#DCFCE7]', text: 'text-[#166534]', border: 'border-[#16A34A]' },
+  Common: { bg: 'bg-[#F1F5F9]', text: 'text-[#334155]', border: 'border-[#64748B]' },
+};
+
+/** Real obscurity percentage with Brawl Stars rarity tier badge, or loading/fallback status without overcrowding. */
 function ObscurityValue({ cell }: { cell: CellState }) {
   if (cell.obscurityStatus === 'loading') {
     return (
       <span
-        className="inline-block rounded border border-brawl-navy bg-brawl-navy px-1.5 py-0.5 font-display text-[10px] sm:text-[11px] leading-none text-white tabular"
+        className="inline-flex items-center rounded border border-brawl-navy bg-brawl-navy px-1.5 py-0.5 font-display text-[10px] sm:text-[11px] leading-none text-white tabular"
         title="Loading player statistics"
       >
         …
@@ -25,21 +34,28 @@ function ObscurityValue({ cell }: { cell: CellState }) {
     );
   }
   if (cell.obscurityStatus === 'available' && cell.obscurityPercent !== null) {
+    const tier = getRarityTierForPercentage(cell.obscurityPercent);
+    const tierName: RarityTierName = tier?.name ?? 'Common';
+    const points = cell.pointsEarned || (tier ? tier.points : FALLBACK_CELL_POINTS);
+    const style = TIER_BADGE_STYLES[tierName];
+
     return (
       <span
-        className="inline-block rounded border border-brawl-navy bg-brawl-navy px-1.5 py-0.5 font-display text-[10px] sm:text-[11px] leading-none text-brawl-yellow tabular"
-        title={`${cell.obscurityPercent}% of players who solved this cell chose this Brawler`}
+        className={`inline-flex items-center gap-0.5 sm:gap-1 rounded border ${style.border} ${style.bg} px-1 sm:px-1.5 py-0.5 font-display text-[9px] sm:text-[11px] leading-none ${style.text} tabular shadow-xs`}
+        title={`${tierName} tier: +${points} pts (${cell.obscurityPercent}% of players chose this)`}
       >
-        {cell.obscurityPercent}%
+        <span className="hidden sm:inline uppercase text-[9px] font-black tracking-tight">{tierName}</span>
+        <span className="sm:hidden uppercase text-[9px] font-black">{tierName.slice(0, 3)}</span>
+        <span className="font-bold">+{points}</span>
       </span>
     );
   }
   return (
     <span
-      className="inline-block rounded border border-brawl-navy bg-white/90 px-1.5 py-0.5 font-display text-[10px] sm:text-[11px] leading-none text-brawl-navy/70 tabular"
-      title="Player statistics unavailable"
+      className="inline-flex items-center gap-1 rounded border border-brawl-navy bg-white/90 px-1.5 py-0.5 font-display text-[9px] sm:text-[11px] leading-none text-brawl-navy/70 tabular"
+      title="Player statistics unavailable (+100 pts fallback)"
     >
-      N/A
+      <span>+100</span>
     </span>
   );
 }

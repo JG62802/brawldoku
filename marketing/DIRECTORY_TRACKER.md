@@ -1,104 +1,80 @@
 # Directory Tracker: Gaming & Puzzle Directories
 
-**Status:** Research Complete | Drafts Prepared | Awaiting Owner Approval to Submit  
-**Cost:** $0 across all candidates
+**Status:** 4 Approved Submissions Completed & Confirmed | 1 Staged (Playlin)  
+**Execution Date:** November 4, 2026  
+**Cost:** $0 across all submissions (Zero paid placements; all 100% free).  
+**Overview:** All 4 authorized submissions returned HTTP 200/202 confirmation from their production backends. Confirmation screenshots and backend response logs have been preserved in the artifacts directory.
 
 ---
 
-## 1. Directory Candidates Overview
+## 1. Directory Submissions Status Table
 
-| Directory / Hub | Verified Official URL | Target Audience | Fee | Login Required? | Submissions Open? | Current Status |
-| :--- | :--- | :--- | :---: | :---: | :---: | :---: |
-| **DailyDoku** | `https://daily-doku.com` | Daily grid & puzzle gamers | Free | No | Yes | Drafted (Queue Item 2A) |
-| **Playlin** | `https://playlin.io` | Daily web game discovery | Free | No | Yes | Drafted (Queue Item 2B) |
-| **Dailydles** | `https://dailydles.com` | Wordle/Doku enthusiasts | Free | No | Yes | Drafted (Queue Item 2C) |
-| **Listdle** | `https://listdle.com` | Daily browser puzzle fans | Free | No | Yes | Drafted (Queue Item 2D) |
-| **Alldle** | `https://alldle.net` | Daily and unlimited games | Free | No | Yes | Drafted (Queue Item 2E) |
-| **Itch.io** | `https://itch.io` | Indie browser gamers | Free | Yes (Dev) | Always Open | Drafted (Queue Item 2F) |
-| **Reddit r/WebGames** | `https://reddit.com/r/WebGames` | Browser gamers (no download) | Free | Yes (Reddit) | Open (Rule `[DEV]`) | Drafted (Queue Item 4) |
+| Directory | Submission Path | Timestamp | Backend Status | Confirmation Message / Reference | Confirmation Screenshot | Current Status |
+| :--- | :--- | :---: | :---: | :--- | :---: | :---: |
+| **1. DailyDoku** | `https://www.daily-doku.com/` (`app-suggest-dialog`) | 2026-11-04 02:08 UTC-5 | **HTTP 200** (Firestore Write Channel) | Suggestion written to database; modal closed cleanly | `dailydoku_submitted.png` | ✅ **Submitted & In Review** |
+| **2. Dailydles** | `https://dailydles.com/submit` | 2026-11-04 02:08 UTC-5 | **HTTP 202 Accepted** (AWS Lambda) | *"Thanks, got it! Every suggestion is played and checked by a human before it goes live, usually within a week."* | `dailydles_submitted.png` | ✅ **Submitted & In Review** |
+| **3. Playlin** | `https://playlin.io/submit/` | — | — | **Not submitted** (Staged form retained; requires submitter email) | `playlin_staged.png` | ⏸️ **Staged (Hold)** |
+| **4. Listdle** | `https://listdle.com/submit` | 2026-11-04 02:10 UTC-5 | **HTTP 200 OK** | *"Thanks for your submission! We'll review the game and add it to Listdle within a week or so."* | `listdle_submitted.png` | ✅ **Submitted & In Review** |
+| **5. Alldle** | `https://www.alldle.net/submit` | 2026-11-04 02:10 UTC-5 | **HTTP 200 OK** (`api.alldle.net/games/submit`) | *"Thanks. Brawldoku is in the queue. A person will check it against the listing rules."* | `alldle_submitted.png` | ✅ **Submitted & In Review** |
 
 ---
 
-## 2. Detailed Candidate Profiles & Submission Drafts
+## 2. Detailed Submission Logs & Verified Payload
 
-### A. DailyDoku
-- **Official URL:** `https://daily-doku.com`
-- **Why Brawldoku is Relevant:** DailyDoku specifically aggregates 3×3 grid puzzles, PokeDoku variations, and daily routine puzzles. Brawldoku is the exact format their users look for.
-- **Submission Requirements:** Game URL, Title, Category tags, Description, Daily reset behavior.
-- **Submission Draft:**
-  - **Game Name:** Brawldoku
-  - **Game URL:** `https://www.brawldoku.fun/`
-  - **Genre:** Category Grid / Daily Puzzle / Trivia
-  - **Daily Reset:** Midnight UTC (00:00 UTC)
-  - **Short Description:** A daily 3×3 Brawl Stars category puzzle. Match 9 intersecting brawler categories, hunt rare answers, and test your fandom knowledge every day with zero downloads or logins.
-- **Estimated Effort:** 5 minutes.
-- **Next Action:** Awaiting owner approval in `APPROVAL_QUEUE.md` (Item 2A).
+### 1. DailyDoku
+- **Submission URL:** `https://www.daily-doku.com/`
+- **Submitted Payload:**
+  - `name`: `Brawldoku`
+  - `url`: `https://www.brawldoku.fun/`
+- **Backend Response:** `https://firestore.googleapis.com/google.firestore.v1.Firestore/Write/channel` returned `status: 200`.
+- **Confirmation State:** Dialog closed automatically following database commit.
+- **Artifact:** [`dailydoku_submitted.png`](file:///Users/jonathangalarza/.gemini/antigravity/brain/fbaf419e-c3a7-4235-bf0b-37261285ffcd/dailydoku_submitted.png)
 
 ---
 
-### B. Playlin
-- **Official URL:** `https://playlin.io`
-- **Why Brawldoku is Relevant:** Playlin is a curated catalog of web games with daily challenges and Wordle-adjacent mechanics.
-- **Submission Requirements:** URL, title, tags, developer name/handle.
-- **Submission Draft:**
-  - **Game Name:** Brawldoku
-  - **URL:** `https://www.brawldoku.fun/`
-  - **Category:** Daily Trivia / Puzzle
-  - **Tags:** brawl-stars, grid-puzzle, daily, trivia, pokedoku
-  - **Description:** Test your Brawl Stars knowledge daily! Complete the 3×3 grid by finding brawlers matching intersecting row and column criteria. Features real-time community obscurity scoring.
-- **Estimated Effort:** 5 minutes.
-- **Next Action:** Awaiting owner approval in `APPROVAL_QUEUE.md` (Item 2B).
+### 2. Dailydles
+- **Submission URL:** `https://dailydles.com/submit`
+- **Submitted Payload:**
+  - `url`: `https://www.brawldoku.fun/`
+  - `name`: `Brawldoku`
+  - `category`: `🎮 Gaming`
+  - `tagline`: `A daily 3×3 Brawl Stars grid puzzle. Match categories, find rare brawlers, and beat community obscurity scores!`
+  - `notes`: `Brawldoku is an original daily 3×3 grid trivia puzzle for Brawl Stars fans. Features 106 brawlers, 40+ category filters, persistent daily streaks, and real-time community obscurity percentages. 100% free, no ads, no logins, mobile/desktop responsive, resetting daily at midnight UTC.`
+  - `email`: *(Left blank)*
+  - `website`: *(Honeypot left empty)*
+- **Backend Response:** `https://su4skekh3wcgmh33llbpzg7xxa0edwrg.lambda-url.eu-west-2.on.aws/` returned `status: 202 Accepted`.
+- **Confirmation Message:** *"Thanks, got it! Every suggestion is played and checked by a human before it goes live, usually within a week."*
+- **Artifact:** [`dailydles_submitted.png`](file:///Users/jonathangalarza/.gemini/antigravity/brain/fbaf419e-c3a7-4235-bf0b-37261285ffcd/dailydles_submitted.png)
 
 ---
 
-### C. Dailydles
-- **Official URL:** `https://dailydles.com`
-- **Why Brawldoku is Relevant:** Hand-checked directory specializing exclusively in free daily games without account friction.
-- **Submission Requirements:** Game link and brief overview confirming no paywall or forced registration.
-- **Submission Draft:**
-  - **Game Name:** Brawldoku
-  - **URL:** `https://www.brawldoku.fun/`
-  - **Free & No Registration:** Yes (100% free, browser-based, no login required)
-  - **Description:** A daily 3×3 Brawl Stars category matching puzzle. 9 cells, 9 guesses, resetting daily at midnight UTC.
-- **Estimated Effort:** 5 minutes.
-- **Next Action:** Awaiting owner approval in `APPROVAL_QUEUE.md` (Item 2C).
+### 3. Playlin (On Hold)
+- **Submission URL:** `https://playlin.io/submit/`
+- **Status:** **Not submitted per user instruction.**
+- **Staged Form Payload:** Game URL (`https://www.brawldoku.fun/`), Game Name (`Brawldoku`), Comments describing 106 brawlers & daily reset.
+- **Outstanding Requirement:** Playlin enforces HTML `required` validation on `submitter_email`. Awaiting user's preferred email if they choose to submit in the future.
+- **Artifact:** [`playlin_staged.png`](file:///Users/jonathangalarza/.gemini/antigravity/brain/fbaf419e-c3a7-4235-bf0b-37261285ffcd/playlin_staged.png)
 
 ---
 
-### D. Listdle
-- **Official URL:** `https://listdle.com`
-- **Why Brawldoku is Relevant:** Listdle accepts direct developer submissions for daily browser puzzles.
-- **Submission Requirements:** Game URL submission input.
-- **Submission Draft:**
-  - **URL:** `https://www.brawldoku.fun/`
-  - **Game Title:** Brawldoku
-- **Estimated Effort:** 2 minutes.
-- **Next Action:** Awaiting owner approval in `APPROVAL_QUEUE.md` (Item 2D).
+### 4. Listdle
+- **Submission URL:** `https://listdle.com/submit`
+- **Submitted Payload:**
+  - `url`: `https://www.brawldoku.fun/`
+  - `is_creator`: Checked (`I made this game`)
+  - `category`: Selected `VIDEO GAMES`
+  - Scraped Metadata Confirmed: Title (`Brawldoku`) and Open Graph description automatically populated by Listdle scraper.
+- **Backend Response:** HTTP 200 OK.
+- **Confirmation Message:** *"Thanks for your submission! We'll review the game and add it to Listdle within a week or so."*
+- **Artifact:** [`listdle_submitted.png`](file:///Users/jonathangalarza/.gemini/antigravity/brain/fbaf419e-c3a7-4235-bf0b-37261285ffcd/listdle_submitted.png)
 
 ---
 
-### E. Alldle
-- **Official URL:** `https://alldle.net`
-- **Why Brawldoku is Relevant:** Searchable catalog of daily games, word games, and franchise guessing games.
-- **Submission Requirements:** Game title, URL, platform (Web/Mobile Browser).
-- **Submission Draft:**
-  - **Title:** Brawldoku
-  - **Website:** `https://www.brawldoku.fun/`
-  - **Platform:** HTML5 / Web (Mobile & Desktop)
-  - **Description:** The daily Brawl Stars grid puzzle. Match brawlers by weapon type, release year, ammo, and class.
-- **Estimated Effort:** 3 minutes.
-- **Next Action:** Awaiting owner approval in `APPROVAL_QUEUE.md` (Item 2E).
-
----
-
-### F. Itch.io (HTML5 Web Game Listing)
-- **Official URL:** `https://itch.io`
-- **Why Brawldoku is Relevant:** Itch.io is the premiere indie game directory. An HTML5 web embed or direct external link game page drives persistent discoverability from puzzle and indie game tags.
-- **Submission Requirements:** Itch.io account, cover image (630×500), description, tags (`brawl-stars`, `puzzle`, `trivia`, `daily`).
-- **Submission Draft:**
-  - **Title:** Brawldoku — Daily Brawl Stars Grid Puzzle
-  - **Tagline:** A daily 3×3 category matching game for Brawl Stars fans.
-  - **Game URL:** Embed or Direct link to `https://www.brawldoku.fun/`
-  - **Disclaimer:** Includes full Supercell Fan Content Policy disclaimer.
-- **Estimated Effort:** 15 minutes (requires owner's Itch account).
-- **Next Action:** Awaiting owner approval in `APPROVAL_QUEUE.md` (Item 2F).
+### 5. Alldle
+- **Submission URL:** `https://www.alldle.net/submit`
+- **Submitted Payload:**
+  - `url`: `https://www.brawldoku.fun/`
+  - `name`: `Brawldoku`
+- **Backend Response:** `https://api.alldle.net/games/submit` returned `status: 200 OK`.
+- **Confirmation Message:** *"Thanks. Brawldoku is in the queue. A person will check it against the listing rules. If it fits, it gets its own page and shows up in new releases."*
+- **Artifact:** [`alldle_submitted.png`](file:///Users/jonathangalarza/.gemini/antigravity/brain/fbaf419e-c3a7-4235-bf0b-37261285ffcd/alldle_submitted.png)
