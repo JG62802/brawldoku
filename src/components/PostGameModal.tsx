@@ -4,6 +4,7 @@ import { DailyGameState } from '../types/game';
 import { buildPostGameShareText } from '../engine/gameEngine';
 import { BRAWLER_BY_ID } from '../data/brawlers';
 import { BrawlerAvatar } from './BrawlerAvatar';
+import { ObscurityValue } from './PuzzleGrid';
 import { Modal } from './Modal';
 
 interface PostGameModalProps {
@@ -106,7 +107,7 @@ export const PostGameModal: React.FC<PostGameModalProps> = ({ gameState, onClose
                     onInspectCell(rIdx, cIdx);
                   }}
                   aria-label={brawler ? `${brawler.name}, inspect answers` : 'Unsolved, inspect answers'}
-                  className={`flex aspect-square flex-col rounded-xl border-[2.5px] border-brawl-navy p-1.5 shadow-brawl-xs transition-colors ${
+                  className={`flex aspect-square flex-col rounded-xl border-[2.5px] border-brawl-navy p-1.5 shadow-brawl-xs transition-colors overflow-hidden ${
                     brawler
                       ? 'bg-brawl-green-pale ring-2 ring-inset ring-brawl-green hover:bg-[#bbf7d0]'
                       : 'bg-brawl-blue-sky hover:bg-brawl-yellow-pale'
@@ -114,12 +115,17 @@ export const PostGameModal: React.FC<PostGameModalProps> = ({ gameState, onClose
                 >
                   {brawler ? (
                     <>
-                      <div className="flex min-h-0 flex-1 items-center justify-center">
+                      <div className="relative flex min-h-0 flex-1 w-full items-center justify-center p-0.5">
                         <BrawlerAvatar brawler={brawler} size="cell" />
+                        <div className="absolute top-0 right-0 z-10 pointer-events-none">
+                          <ObscurityValue cell={cell} />
+                        </div>
                       </div>
-                      <span className="self-center mt-1 max-w-full truncate rounded border border-brawl-navy bg-brawl-navy px-1.5 py-0.5 font-display text-[10px] leading-none text-brawl-yellow tabular">
-                        {cell.rarityTier ? `${cell.rarityTier} · ` : ''}+{cell.pointsEarned}
-                      </span>
+                      <div className="mt-1 w-full text-center leading-tight">
+                        <span className="block truncate font-display text-[9px] sm:text-[11px] uppercase tracking-[0.02em] text-brawl-navy">
+                          {brawler.name}
+                        </span>
+                      </div>
                     </>
                   ) : (
                     <span className="m-auto font-display text-sm text-brawl-navy/50">—</span>

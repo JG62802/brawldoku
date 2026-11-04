@@ -2,7 +2,11 @@ import React, { useRef, useState } from 'react';
 import { DailyGameState, CategoryDefinition, CellState, RarityTierName } from '../types/game';
 import { CATEGORY_BY_ID } from '../engine/categories';
 import { BRAWLER_BY_ID } from '../data/brawlers';
-import { FALLBACK_CELL_POINTS, getRarityTierForPercentage } from '../engine/rarityScoring';
+import {
+  FALLBACK_CELL_POINTS,
+  getRarityTierForPercentage,
+  TIER_BADGE_STYLES,
+} from '../engine/rarityScoring';
 import { BrawlerAvatar } from './BrawlerAvatar';
 
 interface PuzzleGridProps {
@@ -13,20 +17,12 @@ interface PuzzleGridProps {
   onInspectCellAnswers: (row: number, col: number) => void;
 }
 
-const TIER_BADGE_STYLES: Record<RarityTierName, { bg: string; text: string; border: string }> = {
-  Legendary: { bg: 'bg-[#FEF08A]', text: 'text-[#854D0E]', border: 'border-[#CA8A04]' },
-  Mythic: { bg: 'bg-[#FEE2E2]', text: 'text-[#991B1B]', border: 'border-[#DC2626]' },
-  Epic: { bg: 'bg-[#F3E8FF]', text: 'text-[#6B21A8]', border: 'border-[#9333EA]' },
-  Rare: { bg: 'bg-[#DCFCE7]', text: 'text-[#166534]', border: 'border-[#16A34A]' },
-  Common: { bg: 'bg-[#F1F5F9]', text: 'text-[#334155]', border: 'border-[#64748B]' },
-};
-
 /** Real obscurity percentage with Brawl Stars rarity tier badge, or loading/fallback status without overcrowding. */
-function ObscurityValue({ cell }: { cell: CellState }) {
+export function ObscurityValue({ cell }: { cell: CellState }) {
   if (cell.obscurityStatus === 'loading') {
     return (
       <span
-        className="inline-flex items-center rounded border border-brawl-navy bg-brawl-navy px-1.5 py-0.5 font-display text-[10px] sm:text-[11px] leading-none text-white tabular"
+        className="inline-flex items-center rounded-full border border-brawl-navy bg-brawl-navy px-1.5 py-0.5 font-display text-[9px] sm:text-[10px] leading-none text-white tabular shadow-brawl-xs"
         title="Loading player statistics"
       >
         …
@@ -41,18 +37,18 @@ function ObscurityValue({ cell }: { cell: CellState }) {
 
     return (
       <span
-        className={`inline-flex items-center gap-0.5 sm:gap-1 rounded border ${style.border} ${style.bg} px-1 sm:px-1.5 py-0.5 font-display text-[9px] sm:text-[11px] leading-none ${style.text} tabular shadow-xs`}
+        className={`inline-flex items-center gap-0.5 sm:gap-1 rounded-full border ${style.border} ${style.bg} px-1.5 py-0.5 font-display text-[9px] sm:text-[10px] leading-none ${style.text} tabular shadow-brawl-xs`}
         title={`${tierName} tier: +${points} pts (${cell.obscurityPercent}% of players chose this)`}
       >
         <span className="hidden sm:inline uppercase text-[9px] font-black tracking-tight">{tierName}</span>
-        <span className="sm:hidden uppercase text-[9px] font-black">{tierName.slice(0, 3)}</span>
+        <span className="sm:hidden uppercase text-[8px] font-black">{tierName.slice(0, 3)}</span>
         <span className="font-bold">+{points}</span>
       </span>
     );
   }
   return (
     <span
-      className="inline-flex items-center gap-1 rounded border border-brawl-navy bg-white/90 px-1.5 py-0.5 font-display text-[9px] sm:text-[11px] leading-none text-brawl-navy/70 tabular"
+      className="inline-flex items-center gap-1 rounded-full border border-brawl-navy bg-white/95 px-1.5 py-0.5 font-display text-[9px] sm:text-[10px] leading-none text-brawl-navy/70 tabular shadow-brawl-xs"
       title="Player statistics unavailable (+100 pts fallback)"
     >
       <span>+100</span>
@@ -202,15 +198,15 @@ export const PuzzleGrid: React.FC<PuzzleGridProps> = ({
 
                   {brawler ? (
                     <>
-                      <div className="pointer-events-none flex min-h-0 flex-1 items-center justify-center p-0.5">
+                      <div className="relative pointer-events-none flex min-h-0 flex-1 w-full items-center justify-center p-0.5">
                         <BrawlerAvatar brawler={brawler} size="cell" />
-                      </div>
-                      <div className="pointer-events-none mt-1 flex items-center justify-between gap-1 leading-none">
-                        <span className="min-w-0 truncate font-display text-[11px] sm:text-[13px] uppercase tracking-[0.02em] text-brawl-navy">
-                          {brawler.name}
-                        </span>
-                        <span className="shrink-0">
+                        <div className="absolute top-0 right-0 z-20 pointer-events-none">
                           <ObscurityValue cell={cell} />
+                        </div>
+                      </div>
+                      <div className="pointer-events-none mt-1 w-full text-center leading-tight">
+                        <span className="block truncate font-display text-[10px] sm:text-[12px] uppercase tracking-[0.02em] text-brawl-navy">
+                          {brawler.name}
                         </span>
                       </div>
                     </>

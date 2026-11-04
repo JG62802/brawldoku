@@ -31,6 +31,14 @@ export interface RarityTierDefinition {
 
 export const FALLBACK_CELL_POINTS = 100;
 
+export const TIER_BADGE_STYLES: Record<RarityTierName, { bg: string; text: string; border: string }> = {
+  Legendary: { bg: 'bg-[#FEF08A]', text: 'text-[#854D0E]', border: 'border-[#CA8A04]' },
+  Mythic: { bg: 'bg-[#FEE2E2]', text: 'text-[#991B1B]', border: 'border-[#DC2626]' },
+  Epic: { bg: 'bg-[#F3E8FF]', text: 'text-[#6B21A8]', border: 'border-[#9333EA]' },
+  Rare: { bg: 'bg-[#DCFCE7]', text: 'text-[#166534]', border: 'border-[#16A34A]' },
+  Common: { bg: 'bg-[#F1F5F9]', text: 'text-[#334155]', border: 'border-[#64748B]' },
+};
+
 export const RARITY_TIERS: Record<RarityTierName, RarityTierDefinition> = {
   Legendary: {
     name: 'Legendary',
