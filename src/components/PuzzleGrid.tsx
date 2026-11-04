@@ -199,13 +199,7 @@ export const PuzzleGrid: React.FC<PuzzleGridProps> = ({
                   {brawler ? (
                     <>
                       <div className="relative pointer-events-none flex min-h-0 flex-1 w-full items-center justify-center p-0.5">
-                        <div className="relative flex h-full w-full max-h-[85%] max-w-[85%] items-center justify-center overflow-hidden rounded-xl">
-                          <BrawlerAvatar
-                            brawler={brawler}
-                            size="cell"
-                            className="h-full w-full overflow-hidden rounded-xl [&_img]:h-full [&_img]:w-full [&_img]:rounded-xl [&_img]:object-cover"
-                          />
-                        </div>
+                        <BrawlerAvatar brawler={brawler} size="cell" className="max-h-[92%] max-w-[92%]" />
                         <div className="absolute top-0 right-0 z-20 pointer-events-none">
                           <ObscurityValue cell={cell} />
                         </div>
