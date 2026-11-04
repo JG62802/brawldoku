@@ -4,7 +4,7 @@ import { DailyGameState } from '../types/game';
 import { buildPostGameShareText } from '../engine/gameEngine';
 import { BRAWLER_BY_ID } from '../data/brawlers';
 import { BrawlerAvatar } from './BrawlerAvatar';
-import { ObscurityValue } from './PuzzleGrid';
+import { ObscurityValue, ObscurityPercentage } from './PuzzleGrid';
 import { Modal } from './Modal';
 
 interface PostGameModalProps {
@@ -121,9 +121,12 @@ export const PostGameModal: React.FC<PostGameModalProps> = ({ gameState, onClose
                       <div className="flex min-h-0 flex-1 w-full items-center justify-center p-0.5">
                         <BrawlerAvatar brawler={brawler} size="cell" className="max-h-[92%] max-w-[92%]" />
                       </div>
-                      <div className="mt-0.5 w-full text-center leading-tight">
-                        <span className="block truncate font-display text-[12px] sm:text-[14px] uppercase tracking-[0.02em] text-brawl-navy">
+                      <div className="mt-0.5 w-full flex items-center justify-between gap-1 leading-none">
+                        <span className="min-w-0 truncate font-display text-[12px] sm:text-[14px] uppercase tracking-[0.02em] text-brawl-navy">
                           {brawler.name}
+                        </span>
+                        <span className="shrink-0">
+                          <ObscurityPercentage cell={cell} />
                         </span>
                       </div>
                     </>

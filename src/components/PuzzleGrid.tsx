@@ -56,6 +56,38 @@ export function ObscurityValue({ cell }: { cell: CellState }) {
   );
 }
 
+/** Original obscurity percentage badge: real percentage, loading pending marker, or explicit N/A. */
+export function ObscurityPercentage({ cell }: { cell: CellState }) {
+  if (cell.obscurityStatus === 'loading') {
+    return (
+      <span
+        className="inline-block rounded border border-brawl-navy bg-brawl-navy px-1.5 py-0.5 font-display text-[10px] sm:text-[11px] leading-none text-white tabular"
+        title="Loading player statistics"
+      >
+        …
+      </span>
+    );
+  }
+  if (cell.obscurityStatus === 'available' && cell.obscurityPercent !== null) {
+    return (
+      <span
+        className="inline-block rounded border border-brawl-navy bg-brawl-navy px-1.5 py-0.5 font-display text-[10px] sm:text-[11px] leading-none text-brawl-yellow tabular"
+        title={`${cell.obscurityPercent}% of players who solved this cell chose this Brawler`}
+      >
+        {cell.obscurityPercent}%
+      </span>
+    );
+  }
+  return (
+    <span
+      className="inline-block rounded border border-brawl-navy bg-white/90 px-1.5 py-0.5 font-display text-[10px] sm:text-[11px] leading-none text-brawl-navy/70 tabular"
+      title="Player statistics unavailable"
+    >
+      N/A
+    </span>
+  );
+}
+
 const CategoryLabel: React.FC<{
   category: CategoryDefinition;
   highlighted: boolean;
@@ -204,9 +236,12 @@ export const PuzzleGrid: React.FC<PuzzleGridProps> = ({
                       <div className="pointer-events-none flex min-h-0 flex-1 w-full items-center justify-center p-0.5">
                         <BrawlerAvatar brawler={brawler} size="cell" className="max-h-[92%] max-w-[92%]" />
                       </div>
-                      <div className="pointer-events-none mt-0.5 w-full text-center leading-tight">
-                        <span className="block truncate font-display text-[12px] sm:text-[14px] uppercase tracking-[0.02em] text-brawl-navy">
+                      <div className="pointer-events-none mt-0.5 w-full flex items-center justify-between gap-1 leading-none">
+                        <span className="min-w-0 truncate font-display text-[12px] sm:text-[14px] uppercase tracking-[0.02em] text-brawl-navy">
                           {brawler.name}
+                        </span>
+                        <span className="shrink-0">
+                          <ObscurityPercentage cell={cell} />
                         </span>
                       </div>
                     </>
